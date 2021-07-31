@@ -200,12 +200,30 @@ def keyword_highlighter(user_sentence, top3_df_dic, model_path):
   # 데이터 프레임에 색상 정보 추가
   top3_df['colors']=color_list
 
-  return top3_df.to_dict()
+
+  # return 구조 수정
+  # result에는 사용자 문장과 top3문장의 하이라이트 정보를 포함
+  result = {'text':[], 'highlight':[]}
+  result['text'].append(user_sentence)
+  result['highlight'].append(user_dict)
+
+  for i in range(0, len(top3_df)):
+    th_dic = {'text': top3_df['review'][i]}
+    color_dic = {}
+    perfume = top3_df['colors'][i]
+    for tw in perfume.keys():
+      if perfume[tw] is not None:
+        color_dic[tw] = perfume[tw][1]
+    result['text'].append(top3_df['review'][i])
+    result['highlight'].append(color_dic)
+
+  return result
 
 if __name__=="__main__":
     import word2vec_similarity
+    import pprint
     user_sentence = 'The guitarist of the band Sensual and sexy Wearing a shirt and ripped jeans Sweet and drowsy eyes He soaked in sweat in the heat of the stage'
     label = 2
     top3_df_dic = word2vec_similarity.word2vec_similarity(user_sentence, label)
     model_path = './model/w2v_10window'
-    print(keyword_highlighter(user_sentence, top3_df_dic, model_path))
+    pprint.pprint(keyword_highlighter(user_sentence, top3_df_dic, model_path))
