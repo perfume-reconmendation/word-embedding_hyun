@@ -1,4 +1,1 @@
-git_init
-git_init.ipynb
-data/
-model/
+word2vec_similarity/dataset/**/*
